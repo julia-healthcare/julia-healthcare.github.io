@@ -9,5 +9,5 @@ Julia is an exciting **young** programming language that focuses on ease of use 
 ## Links 
 
 * [Github repository](https://github.com/julia-healthcare/)
-* [General optimisation problems in health](https://juliaforhealthcare/optimisation)
-* [About juliahealthcare.org](https://juliaforhealthcare/about)
+* [General optimisation problems in health](https://juliahealthcare.org/optimisation)
+* [About juliahealthcare.org](https://juliahealthcare.org/about)

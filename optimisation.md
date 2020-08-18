@@ -14,3 +14,10 @@ In health systems we are often trying to juggle multiple objectives.  Emergency 
 When considering optimisation of multiple objectives, the Pareto front is that collection of points where one objective cannot be improved without detriment to another objective. These points are also called ‘non-dominated’. In contrast, points not on the Pareto front, or ‘dominated’ points represents points where it is possible to improve one or more objectives without loss of performance of another objective.
 
 [Pareto front examples](https://juliahealthcare.org/pareto_front)
+
+# Local Search Procedures
+
+Local search procedures are classical metaheuristics that are used widely in industry. They are applicable to a variety of health service problems from assigning nurses to shifts, to routing and scheduling to ambulance location.
+
+* [First Improvement Local Search](https://juliahealthcare.org/first_improv) 
+* [Steepest Ascent Local Search](https://juliahealthcare.org/steepest) 

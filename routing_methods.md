@@ -207,7 +207,7 @@ end
 
 ## Bringing it all together
 
-That's it. To run it all in one go use the code below.  Note that the code sets a random seed before each optimisation run in order to reproduce the results.
+That's it. To run it all in one go use the code below.  Note that the code sets a random seed before each optimisation run in order to reproduce the results.  For fun, try the code with a harder problem.  You can select up to 70 patients to visit.
 
 ```julia
 using Random
@@ -227,5 +227,105 @@ Random.seed!(42);
 cost, solution = hill_climb(tour, matrix, tweak=tweak_two_opt)
 println(cost, solution)
 ```
+## Exploitation versus exploration 
+
+An even simpler heuristic search is called Random Restarts. Search is conducted by repeatedly shuffling - or randomly restarting - a tour and selecting the best tour at the end of the run.  The code listing below provides an illustrative implementation.  Hill climbing and Random Search are at the opposite end of the search spectrum.  Random Search is pure exploration while Hill Climbing is highly exploitative (greedy) in that it only looks at neighbours of the best solution.
+
+```julia
+function random_restarts(init_solution, matrix; time_limit=2.0)
+    best = copy(init_solution)
+    best_cost = -tour_cost(best, matrix)
+    
+    start = time()
+    iter = 0
+    while (time() - start) < time_limit
+        iter += 1
+        neighbour = shuffle(copy(init_solution))
+        neighbour_cost = -tour_cost(neighbour, matrix)
+        
+        if neighbour_cost > best_cost
+            best, best_cost = neighbour, neighbour_cost
+        end
+    end
+    
+    return -best_cost, best, iter
+end 
+```
+To try and balance exploration and exploitation we could combine Hill Climbing and Random Search.  In the code below we set a total time limit and periodically hill climb before randomly restarting from a new initial solution.  This helps - to an extent - to avoid getting stuck in what is sometimes called a 'local optima'.
+
+```julia
+function hill_climb_with_random_restarts(init_solution, matrix; time_limit=2.0, 
+                                         tweak=simple_tweak)
+
+    S = shuffle(init_solution)
+    S_cost = -tour_cost(S, matrix)
+    best, best_cost = copy(S), S_cost
+    start = time()
+
+    #outer loop = overall time budget
+    while (time() - start) < time_limit
+
+        #sample a climbing time up to time remaining
+        climbing_time = rand(0: time_limit - (time() - start))
+        climb_start = time()
+        
+        #inner loop = stochastic hill climb
+        while (time() - climb_start) < climbing_time
+            R = tweak(copy(S))
+            R_cost = -tour_cost(R, matrix)
+
+            if R_cost > S_cost
+                S, S_cost = copy(R), R_cost
+            end
+        
+        end
+        
+        #update the best if hill climbing found better solution
+        if S_cost > best_cost
+            best, best_cost = copy(S), S_cost
+        end
+        
+        #random restart!
+        S = shuffle(init_solution)
+        S_cost -tour_cost(S, matrix)
+    end
+    
+    return -best_cost, best
+    
+end
+```
+Let try these methods and do a simple comparison:
+
+```julia
+Random.seed!(42);
+
+coords = trim_cities(st70, 20);
+matrix = euclidean_distance_matrix(coords);
+tour = [i for i in 1:size(coords)[1]];
+
+# tweak with 2 opt.
+@time result1 = hill_climb_with_random_restarts(tour, matrix, time_limit=2.0
+                                                tweak=tweak_two_opt)
+
+#reset random seed
+Random.seed!(42);
+
+#extra time
+@time result2 = hill_climb_with_random_restarts(tour, matrix, time_limit=5.0,
+                                                tweak=tweak_two_opt)
+
+println(result1)
+println(result2)
+```
+
+And the results!
+
+```
+2.000009 seconds (19.72 M allocations: 3.621 GiB, 5.49% gc time)
+5.000005 seconds (73.04 M allocations: 13.152 GiB, 7.87% gc time)
+(396.7043800775278, [6, 5, 10, 11, 12, 17, 9, 20, 14, 3, 8, 7, 2, 19, 15, 13, 1, 16, 4, 18])
+(362.3478303531909, [14, 20, 8, 19, 15, 13, 1, 16, 5, 10, 11, 12, 9, 17, 6, 18, 4, 2, 7, 3])
+```
+
 
 

@@ -9,4 +9,8 @@ Many healthcare systems manage assets or workforces that they need to deploy geo
 
 ## Healthcare problem with multiple objectives
 
-* Coming soon...
+In health systems we are often trying to juggle multiple objectives.  Emergency stroke care a classic case study. For example we might be minimising ambulance transport time to hospital, whilst trying to consolidate the stroke units in order to improve quality of care.  
+
+When considering optimisation of multiple objectives, the Pareto front is that collection of points where one objective cannot be improved without detriment to another objective. These points are also called ‘non-dominated’. In contrast, points not on the Pareto front, or ‘dominated’ points represents points where it is possible to improve one or more objectives without loss of performance of another objective.
+
+[Pareto front examples](https://juliahealthcare.org/pareto_front)

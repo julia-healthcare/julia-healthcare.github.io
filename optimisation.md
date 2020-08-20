@@ -21,4 +21,4 @@ Local search procedures are classical metaheuristics that are used widely in ind
 
 * [First Improvement Local Search](https://juliahealthcare.org/first_improv) 
 * [Steepest Ascent Local Search](https://juliahealthcare.org/steepest) 
-* [Iterated Local Search]((https://juliahealthcare.org/ils) )
+* [Iterated Local Search](https://juliahealthcare.org/ils)
